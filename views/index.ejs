@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<hr>
+<script src="javascript/jquery.min.js"></script>
+<script src="javascript/RGraph/RGraph.common.core.js"></script>
+<script src="javascript/RGraph/RGraph.gauge.js"></script>
+<script src="javascript/RGraph/RGraph.common.effects.js"></script>
+<script src="javascript/RGraph/RGraph.line.js"></script>
+
+<div id="field"></div>
+<div id="content"></div>
+<div id="info"></div>
+<script src='/socket.io/socket.io.js'></script>
+
+<!-- main js -->
+<script>
+    var gauge_Tampere_Temp;
+    var gauge_Tampere_Humi;
+    var gauge_Tampere_Pres;
+    var canvas;
+    window.onload = function () {
+
+        /* start Tampere_Temp */
+        gauge_Tampere_Temp = new RGraph.Gauge('Tampere_Temp',-40, 40, 0)
+            .set('scale.decimals', 0)
+            .Set('border.outer', 'transparent')
+            .Set('border.inner', 'transparent')
+            .Set('colors.ranges', [])
+            .Set('background.color', 'transparent')
+            .Set('border.outline', 'transparent')
+            .set('tickmarks.small', 50)
+            .set('tickmarks.big', 5)
+            .set('title.top.size', 24)
+            .set('title.top.pos', 0.15)
+            .set('title.bottom', '°c')
+            .set('title.bottom.color', '#aaa')
+            .set('border.outer', 'Gradient(white:white:white:white:white:white:white:white:white:white:#aaa)')
+            .draw();
+        /* end Tampere_Temp */
+
+//========================================================================================================
+
+        /* start Tampere_Humi */
+        gauge_Tampere_Humi = new RGraph.Gauge('Tampere_Humi', 0, 100, 0)
+            .set('scale.decimals', 0)
+            .Set('border.outer', 'transparent')
+            .Set('border.inner', 'transparent')
+            .Set('colors.ranges', [])
+            .Set('background.color', 'transparent')
+            .Set('border.outline', 'transparent')
+            .set('tickmarks.small', 50)
+            .set('tickmarks.big', 5)
+            .set('title.top.size', 24)
+            .set('title.top.pos', 0.15)
+            .set('title.bottom', '%')
+            .set('title.bottom.color', '#aaa')
+            .set('border.outer', 'Gradient(white:white:white:white:white:white:white:white:white:white:#aaa)')
+            .draw();
+        /* end Tampere_Humi */
+
+//========================================================================================================
+
+
+        gauge_Tampere_Pres = new RGraph.Gauge('Tampere_Pres', 850, 1150, 0)
+            .set('scale.decimals', 0)
+            .Set('border.outer', 'transparent')
+            .Set('border.inner', 'transparent')
+            .Set('colors.ranges', [])
+            .Set('background.color', 'transparent')
+            .Set('border.outline', 'transparent')
+            .set('tickmarks.small', 50)
+            .set('tickmarks.big', 5)
+            .set('title.top.size', 24)
+            .set('title.top.pos', 0.15)
+            .set('title.bottom', 'hPa')
+            .set('title.bottom.color', '#aaa')
+            .set('border.outer', 'Gradient(white:white:white:white:white:white:white:white:white:white:#aaa)')
+            .draw();
+        canvas = document.getElementById("cvs_graph");
+
+
+    }
+
+</script>
+
+
+<!-- start Tampere_Temp -->
+<script>
+
+    var socket = io.connect('http://localhost:4500');
+    socket.on('message', function (data) {
+        console.log(JSON.stringify(data, null, " "));
+
+        if (data.browseName === "Tampere_Temp") {
+            gauge_Tampere_Temp.value = data.value.value.value;
+        }
+        gauge_Tampere_Temp.draw();
+        gauge_Tampere_Temp.set('title.top', "Temp");
+
+    });
+
+</script>
+<canvas id="Tampere_Temp" width="250" height="250">[No canvas support]</canvas>
+<!-- end Tampere_Temp -->
+
+
+<!-- start Tampere_humidity -->
+<script>
+
+    var socket = io.connect('http://localhost:4500');
+    socket.on('message', function (data) {
+        console.log(JSON.stringify(data, null, " "));
+
+        if (data.browseName === "Tampere_Humi") {
+            gauge_Tampere_Humi.value = data.value.value.value;
+        }
+
+        //gauge1.value = 22;
+        gauge_Tampere_Humi.draw();
+
+        gauge_Tampere_Humi.set('title.top', "Humidity");
+
+        // drawGraph(data.value);
+    });
+
+</script>
+<canvas id="Tampere_Humi" width="250" height="250">[No canvas support]</canvas>
+<!-- end Tampere_Temp -->
+
+
+<!-- start Tampere_humidity -->
+<script>
+
+    var socket = io.connect('http://localhost:4500');
+    socket.on('message', function (data) {
+        console.log(JSON.stringify(data, null, " "));
+
+        if (data.browseName === "Tampere_Pres") {
+            gauge_Tampere_Pres.value = data.value.value.value;
+        }
+        gauge_Tampere_Pres.draw();
+        gauge_Tampere_Pres.set('title.top', "Pressure");
+
+    });
+
+</script>
+<canvas id="Tampere_Pres" width="250" height="250">[No canvas support]</canvas>
+<!-- end Tampere_Pres -->
+
+
