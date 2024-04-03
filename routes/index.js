@@ -20,8 +20,8 @@ router.post('/AddDevice', function(req, res,next) {
     async.series([
 
         function (callback) {
-            const username = 'SEAMK';
-            const password = 'DefaultPass123';
+            const username = '******';
+            const password = '******';
 
             var NameOfDevice = req.body.name;
 
